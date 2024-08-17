@@ -3,7 +3,7 @@ FROM maven:3.9.7-amazoncorretto-17 AS build
 WORKDIR /home/app
 COPY pom.xml .mvn ./
 COPY src ./src
-RUN mvn package -DskipTests
+RUN mvn package -DskipTests -U
 
 
 # Второй этап: создание минимального образа с JRE для запуска приложения
