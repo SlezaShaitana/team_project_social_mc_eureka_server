@@ -1,17 +1,13 @@
-# Первый этап: сборка приложения
-FROM maven:3.9.7-amazoncorretto-17 AS build
-WORKDIR /home/app
-COPY pom.xml .mvn ./
-COPY src ./src
-RUN mvn package -DskipTests -U
-
-
-# Второй этап: создание минимального образа с JRE для запуска приложения
 FROM openjdk:17-jdk-alpine
 
-ARG JAR_FILE=/home/app/target/*.jar
-COPY --from=build ${JAR_FILE} /app.jar
+# Устанавливаем рабочую директорию
+WORKDIR /app
 
+# Копируем собранный JAR файл из предыдущего этапа
+COPY target/eureka-server-0.0.1-SNAPSHOT.jar myapp.jar
+
+# Открываем порт, на котором будет работать приложение
 EXPOSE 8888
 
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+# Запускаем приложение
+ENTRYPOINT ["java", "-jar", "myapp.jar"]
